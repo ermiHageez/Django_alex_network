@@ -1,5 +1,17 @@
-echo ".venv/
-__pycache__/
-db.sqlite3
+# Python
 *.pyc
-.env" >> .gitignore
+__pycache__/
+*.pyo
+*.pyd
+*.sqlite3
+*.env
+*.venv/
+.env
+
+# Django
+/staticfiles/
+/media/
+
+# VSCode / IDE
+.vscode/
+.idea/

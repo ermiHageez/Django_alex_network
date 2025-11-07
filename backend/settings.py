@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     "debug_toolbar",
 
     # custom apps go here
+    "accounts",
 ]
 
 MIDDLEWARE = [
