@@ -16,6 +16,31 @@ body {
     text-align: center;
     color: white;
 }
+/* ==== NAVIGATION BAR ==== */
+.navbar {
+    background: #2563eb;
+    padding: 15px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar h2 {
+    color: #ffffff;
+}
+
+.nav-links a {
+    color: #e0e7ff;
+    margin-left: 20px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s ease-in-out;
+}
+
+.nav-links a:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}
 
 .container {
     max-width: 900px;

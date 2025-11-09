@@ -126,6 +126,14 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # ---------------------------
 CORS_ALLOW_ALL_ORIGINS = True
 
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:8000",
+    "https://localhost:8000",
+    "http://127.0.0.1:8000",
+    "https://127.0.0.1:8000",
+]
+
+
 # ---------------------------
 # REST FRAMEWORK SETTINGS
 # ---------------------------
@@ -140,4 +148,10 @@ REST_FRAMEWORK = {
 
 INTERNAL_IPS = [
     "127.0.0.1",
+
 ]
+
+from django.urls import reverse_lazy
+
+LOGIN_REDIRECT_URL = reverse_lazy("accounts:home")
+LOGOUT_REDIRECT_URL = reverse_lazy("accounts:home")  # optional
