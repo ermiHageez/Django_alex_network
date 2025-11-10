@@ -22,7 +22,7 @@
             <a href="{% url 'accounts:contact' %}">Contact</a>
 
             {% if user.is_authenticated %}
-           
+
             <a href="{% url 'accounts:logout' %}">Logout</a>
             {% else %}
             <a href="{% url 'accounts:' %}">Login</a>
@@ -44,8 +44,8 @@
         </section>
 
         <section class="card">
-            <button class="btn">Login</button>
-            <button class="btn btn-outline" >Register</button>
+            <a href="{% url 'accounts:login' %}" class="btn">Login</a>
+            <a href="{% url 'accounts:register' %}" class="btn btn-outline">Register</a>
         </section>
     </main>
 

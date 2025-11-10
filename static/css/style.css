@@ -55,6 +55,36 @@ body {
     border-radius: 10px;
     box-shadow: 0px 2px 10px rgba(0,0,0,0.1);
 }
+.card a {
+    text-decoration: none;
+    display: inline-block;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-weight: bold;
+    background: #2563eb;
+    color: white;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    transition: 0.3s ease-in-out;
+    margin-right: 10px;
+}
+
+.card a:hover {
+    background: #1e40af;
+}
+
+/* Outline button */
+.card a.btn-outline {
+    background: transparent;
+    border: 2px solid #2563eb;
+    color: #2563eb;
+}
+
+.card a.btn-outline:hover {
+    background: #2563eb;
+    color: white;
+}
 
 .btn {
     padding: 10px 18px;
