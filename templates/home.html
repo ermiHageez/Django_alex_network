@@ -14,6 +14,29 @@
         <h1>Welcome to Django Alex Network</h1>
         <p>Powered by Modern Education & Technology</p>
     </header>
+    <nav class="navbar">
+        <h2>My Website</h2>
+        <div class="nav-links">
+            <a href="{% url 'accounts:home' %}">Home</a>
+            <a href="{% url 'accounts:about' %}">About</a>
+            <a href="{% url 'accounts:contact' %}">Contact</a>
+
+            {% if user.is_authenticated %}
+
+            <a href="{% url 'accounts:logout' %}">Logout</a>
+            {% else %}
+            <a href="{% url 'accounts:' %}">Login</a>
+            <a href="{% url 'accounts:register' %}">Register</a>
+            {% endif %}
+        </div>
+    </nav>
+    {% if messages %}
+    <div>
+        {% for message in messages %}
+        <p>{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
 
     <main class="container">
         <section class="card">
@@ -21,8 +44,8 @@
         </section>
 
         <section class="card">
-            <button class="btn">Login</button>
-            <button class="btn btn-outline">Register</button>
+            <a href="{% url 'accounts:login' %}" class="btn">Login</a>
+            <a href="{% url 'accounts:register' %}" class="btn btn-outline">Register</a>
         </section>
 
         <section class="dynamic-data card">
@@ -32,7 +55,7 @@
             <h3>Your Numbers:</h3>
             <ul>
                 {% for num in numbers %}
-                    <li>{{ num }}</li>
+                <li>{{ num }}</li>
                 {% endfor %}
             </ul>
         </section>
@@ -43,4 +66,5 @@
     </footer>
 
 </body>
+
 </html>

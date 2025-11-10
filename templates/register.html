@@ -1,0 +1,36 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <link rel="stylesheet" href="{% static 'css/Register.css' %}">
+</head>
+<body>
+      <nav class="navbar">
+        <h2>My Website</h2>
+        <div class="nav-links">
+            <a href="{% url 'accounts:home' %}">Home</a>
+            <a href="{% url 'accounts:about' %}">About</a>
+            <a href="{% url 'accounts:contact' %}">Contact</a>
+
+            <!-- {% if user.is_authenticated %} -->
+           
+            <a href="{% url 'accounts:logout' %}">Logout</a>
+            {% else %}
+            <a href="{% url 'accounts:' %}">Login</a>
+            {% endif %}
+        </div>
+        <h1 class="header">Create an Account</h1>
+    </nav>
+
+    <form method="post" class="container">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Register</button>
+    </form>
+<footer class="footer">
+    <p>Already have an account? <a href="{% url 'accounts:login' %}">Login here</a></p>
+</footer>
+</body>
+</html>
