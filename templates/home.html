@@ -1,11 +1,13 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Alex Network</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
+
 <body>
 
     <header class="header">
@@ -21,6 +23,18 @@
         <section class="card">
             <button class="btn">Login</button>
             <button class="btn btn-outline">Register</button>
+        </section>
+
+        <section class="dynamic-data card">
+            <h2>Hello {{ name }}!</h2>
+            <p>You are a {{ profession }}.</p>
+
+            <h3>Your Numbers:</h3>
+            <ul>
+                {% for num in numbers %}
+                    <li>{{ num }}</li>
+                {% endfor %}
+            </ul>
         </section>
     </main>
 
