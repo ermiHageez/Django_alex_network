@@ -11,7 +11,7 @@
 <body>
 
     <header class="header">
-        <h1>Welcome to Django Alex Network</h1>
+        <h2>Welcome to Django Alex Network</h2>
         <p>Powered by Modern Education & Technology</p>
     </header>
     <nav class="navbar">
@@ -25,7 +25,7 @@
 
             <a href="{% url 'accounts:logout' %}">Logout</a>
             {% else %}
-            <a href="{% url 'accounts:' %}">Login</a>
+            <a href="{% url 'accounts:login' %}">Login</a>
             <a href="{% url 'accounts:register' %}">Register</a>
             {% endif %}
         </div>
