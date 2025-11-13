@@ -1,0 +1,10 @@
+<h2>All Startups</h2>
+<ul>
+  {% for startup in startups %}
+    <li>
+      <a href="{% url 'startup_detail' startup.pk %}">{{ startup.name }}</a>
+      — {{ startup.industry }}
+    </li>
+  {% endfor %}
+</ul>
+<a href="{% url 'startup_create' %}">Create a new startup</a>

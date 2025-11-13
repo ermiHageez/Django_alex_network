@@ -4,9 +4,23 @@
     <meta charset="UTF-8">
     {% load static %}
     <title>Home</title>
+      <link rel="stylesheet" href="{% static 'users/css/Home.css' %}">
 </head>
-<body>
-    <h1>Welcome to the Startup Hub</h1>
-    <p><a href="{% url 'login' %}">Login</a> | <a href="{% url 'register' %}">Register</a></p>
+<body class="home-body">
+    <nav>
+        <h1>Welcome to the Startup Hub</h1>
+        <ul>
+            <li><a href="{% url 'home' %}">Home</a></li>
+        </ul>
+    </nav>
+    <div class="contener">
+        <h2>Welcome to the Startup Hub!</h2>
+        <p>Your gateway to connecting startups, investors, and mentors.</p>
+        <p><a href="{% url 'login' %}" class="btn1">Login</a> | <a href="{% url 'register' %}" class="btn2">Register</a></p>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Startup Hub. All rights reserved.</p>    
+    </footer>
 </body>
 </html>

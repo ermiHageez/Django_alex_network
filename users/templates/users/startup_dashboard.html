@@ -1,2 +1,83 @@
-<h1>Startup Dashboard</h1>
-<p>Welcome, {{ request.user.username }}!</p>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <title>Startup Dashboard</title>
+    <link rel="stylesheet" href="{% static 'users/css/startup_dashboard.css' %}">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-header">
+            <div>
+                <h1>Startup Dashboard</h1>
+                <p>Welcome, {{ request.user.username }}!</p>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+
+        <ul class="nav-menu" id="nav-menu">
+            <li><a href="#">Dashboard</a></li>
+            <li><a href="{% url 'startup_create' %}">Create Start UP</a></li>
+            <li><a href="{% url 'startup_list' %}">List of Start Ups</a></li>
+            <li>
+                {% if user.startups.exists %}
+                <a href="{% url 'update_startup' user.startups.first.id %}">Update Info</a>
+                {% else %}
+                <a href="{% url 'startup_create' %}">Create Startup</a>
+                {% endif %}
+            </li>
+            <li><a href="{% url 'login' %}">Logout</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main content -->
+    <main>
+        <h2>List of Mentors</h2>
+        <p>Explore Mentors and send a Request Mentorship request to collaborate!</p>
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="alert">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <ul class="startup-list">
+            {% for mentor in mentors %}
+            <li class="startup-card">
+                <h3>{{ mentor.user }}</h3>
+                <h3>{{ mentor.Bio }}</h3>
+                <h3>{{ mentor.Startups }}</h3>
+                <p>{{ mentor.expertise|default:"No expertise available." }}</p>
+                <form action="{% url 'join_mentor' mentor.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="join-btn">Request Mentorship</button>
+                </form>
+            </li>
+            {% empty %}
+            <p>No startups available at the moment.</p>
+            {% endfor %}
+        </ul>
+    </main>
+
+    <!-- JavaScript for menu -->
+    <script>
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('nav-menu');
+
+        hamburger.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,7 @@
+<h2>{{ startup.name }}</h2>
+<p>{{ startup.description }}</p>
+<p><strong>Industry:</strong> {{ startup.industry }}</p>
+<p><strong>Owner:</strong> {{ startup.owner.username }}</p>
+{% if user == startup.owner %}
+  <a href="{% url 'update_startup' startup.pk %}">Edit</a>
+{% endif %}
