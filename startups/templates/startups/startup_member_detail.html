@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ startup.name }} - Details</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 2rem;
+      background-color: #f9f9f9;
+    }
+    .startup-detail {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1, h3 {
+      color: #333;
+    }
+    ul {
+      padding-left: 1.5rem;
+    }
+    a {
+      display: inline-block;
+      margin-top: 1rem;
+      color: #007bff;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  {% block content %}
+    <div class="startup-detail">
+      <h1>{{ startup.name }}</h1>
+      <p><strong>Description:</strong> {{ startup.description }}</p>
+      <p><strong>Owner:</strong> {{ startup.owner.username }}</p>
+
+      <h3>Team Members</h3>
+      <ul>
+        {% for member in startup.members.all %}
+          <li>{{ member.get_full_name }}</li>
+        {% empty %}
+          <li>No members listed.</li>
+        {% endfor %}
+      </ul>
+
+      <a href="{% url 'update_startup' startup.pk %}">Edit</a>
+    </div>
+  {% endblock %}
+</body>
+</html>

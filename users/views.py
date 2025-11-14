@@ -7,7 +7,8 @@ from django.views.generic import TemplateView, ListView
 from django.views.generic.edit import FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
-from django.http import HttpResponseRedirect
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
 
 from .forms import CustomUserCreationForm
 from startups.models import Startup
@@ -15,9 +16,9 @@ from mentors.models import Mentor
 from investors.models import Investor
 
 
-# -----------------------
-# Registration CBV
-# -----------------------
+# -----------------------------------------------------
+# Registration (CBV)
+# -----------------------------------------------------
 class RegisterView(FormView):
     template_name = 'users/register.html'
     form_class = CustomUserCreationForm
@@ -27,7 +28,7 @@ class RegisterView(FormView):
         user = form.save(commit=False)
         user_type = self.request.POST.get('user_type')
 
-        # Assign user type flags
+        # Assign user type flag
         if user_type == 'startup':
             user.is_startup = True
         elif user_type == 'investor':
@@ -40,9 +41,9 @@ class RegisterView(FormView):
         return super().form_valid(form)
 
 
-# -----------------------
-# Login CBV
-# -----------------------
+# -----------------------------------------------------
+# Login (CBV)
+# -----------------------------------------------------
 class LoginView(FormView):
     template_name = 'users/login.html'
     form_class = AuthenticationForm
@@ -54,9 +55,9 @@ class LoginView(FormView):
         return super().form_valid(form)
 
 
-# -----------------------
-# Dashboard CBV with redirection
-# -----------------------
+# -----------------------------------------------------
+# Dashboard Redirect Logic
+# -----------------------------------------------------
 class DashboardView(LoginRequiredMixin, View):
     login_url = '/login/'
     redirect_field_name = 'next'
@@ -73,16 +74,16 @@ class DashboardView(LoginRequiredMixin, View):
             return redirect('home')
 
 
-# -----------------------
-# Home page CBV
-# -----------------------
+# -----------------------------------------------------
+# Home Page
+# -----------------------------------------------------
 class HomeView(TemplateView):
     template_name = 'users/home.html'
 
 
-# -----------------------
-# Startup dashboard (with startup list)
-# -----------------------
+# -----------------------------------------------------
+# Startup Dashboard (Shows mentors)
+# -----------------------------------------------------
 class StartupDashboardView(LoginRequiredMixin, ListView):
     model = Mentor
     template_name = 'users/startup_dashboard.html'
@@ -92,9 +93,9 @@ class StartupDashboardView(LoginRequiredMixin, ListView):
         return Mentor.objects.all()
 
 
-# -----------------------
-# Investor dashboard
-# -----------------------
+# -----------------------------------------------------
+# Investor Dashboard (Shows investors)
+# -----------------------------------------------------
 class InvestorDashboardView(LoginRequiredMixin, ListView):
     model = Investor
     template_name = 'users/investor_dashboard.html'
@@ -104,9 +105,9 @@ class InvestorDashboardView(LoginRequiredMixin, ListView):
         return Investor.objects.all()
 
 
-# -----------------------
-# Mentor dashboard
-# -----------------------
+# -----------------------------------------------------
+# Mentor Dashboard (Shows startups)
+# -----------------------------------------------------
 class MentorDashboardView(LoginRequiredMixin, ListView):
     model = Startup
     template_name = 'users/mentor_dashboard.html'
@@ -116,22 +117,42 @@ class MentorDashboardView(LoginRequiredMixin, ListView):
         return Startup.objects.all()
 
 
-# -----------------------
-# Join Views (Functions)
-# -----------------------
-def join_startup(request, startup_id):
-    startup = get_object_or_404(Startup, id=startup_id)
-    messages.success(request, f"You’ve requested to join {startup.name}")
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+# -----------------------------------------------------
+# Join Views (CBV)
+# -----------------------------------------------------
+
+@method_decorator(login_required, name='dispatch')
+class JoinStartupView(View):
+    def post(self, request, startup_id):
+        startup = get_object_or_404(Startup, id=startup_id)
+
+        # Prevent duplicate join
+        if request.user in startup.members.all():
+            messages.warning(request, f"You are already a member of {startup.name}.")
+        else:
+            startup.members.add(request.user)
+            messages.success(request, f"You’ve successfully joined {startup.name}!")
+
+        return redirect(request.META.get('HTTP_REFERER', '/'))
 
 
-def join_investor(request, investor_id):
-    investor = get_object_or_404(Investor, id=investor_id)
-    messages.success(request, f"You’ve requested to connect with investor {investor.name}")
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+@method_decorator(login_required, name='dispatch')
+class JoinInvestorView(View):
+    def post(self, request, investor_id):
+        investor = get_object_or_404(Investor, id=investor_id)
+
+        # You can add connection request logic here later
+        messages.success(request, f"You’ve requested to connect with investor {investor.name}.")
+
+        return redirect(request.META.get('HTTP_REFERER', '/'))
 
 
-def join_mentor(request, mentor_id):
-    mentor = get_object_or_404(Mentor, id=mentor_id)
-    messages.success(request, f"You’ve requested mentorship from {mentor.user}")
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+@method_decorator(login_required, name='dispatch')
+class JoinMentorView(View):
+    def post(self, request, mentor_id):
+        mentor = get_object_or_404(Mentor, id=mentor_id)
+
+        # You can add mentorship request logic here later
+        messages.success(request, f"You’ve requested mentorship from {mentor.user}.")
+
+        return redirect(request.META.get('HTTP_REFERER', '/'))

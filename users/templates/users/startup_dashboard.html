@@ -29,11 +29,24 @@
             <li><a href="{% url 'startup_create' %}">Create Start UP</a></li>
             <li><a href="{% url 'startup_list' %}">List of Start Ups</a></li>
             <li>
-                {% if user.startups.exists %}
-                <a href="{% url 'update_startup' user.startups.first.id %}">Update Info</a>
+                {% with user_startups=user.startups.all %}
+                {% if user_startups %}
+                <ul>
+                    {% for startup in user_startups %}
+                    <li>
+                        {% if user == startup.owner %}
+                        <!-- <a href="{% url 'update_startup' startup.id %}">Edit {{ startup.name }}</a> -->
+                        {% endif %}
+                        <a href="{% url 'startup_member_detail' startup.id %}">View {{ startup.name }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
                 {% else %}
                 <a href="{% url 'startup_create' %}">Create Startup</a>
                 {% endif %}
+                {% endwith %}
+
+
             </li>
             <li><a href="{% url 'login' %}">Logout</a></li>
         </ul>

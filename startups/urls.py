@@ -4,6 +4,7 @@ from .views import (
     StartupCreateView,
     StartupUpdateView,
     StartupDetailView,
+    StartupMemberDetailView, 
 )
 
 urlpatterns = [
@@ -11,4 +12,5 @@ urlpatterns = [
     path('create/', StartupCreateView.as_view(), name='startup_create'),
     path('<int:pk>/', StartupDetailView.as_view(), name='startup_detail'),
     path('update/<int:pk>/', StartupUpdateView.as_view(), name='update_startup'),
+    path('member/<int:pk>/', StartupMemberDetailView.as_view(), name='startup_member_detail'), 
 ]
