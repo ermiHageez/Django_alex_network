@@ -1,0 +1,41 @@
+
+<!-- users/templates/users/register.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'users/css/style.css' %}">
+</head>
+<body>
+    <div class="form-container">
+        <h2>Create an Account</h2>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.username.label_tag }}
+            {{ form.username }}
+
+            {{ form.email.label_tag }}
+            {{ form.email }}
+
+            {{ form.password1.label_tag }}
+            {{ form.password1 }}
+
+            {{ form.password2.label_tag }}
+            {{ form.password2 }}
+
+            <!-- User Type Radio Buttons -->
+            <label>User Type:</label>
+            <div class="radio-group">
+                <label><input type="radio" name="user_type" value="startup" required> Startup</label>
+                <label><input type="radio" name="user_type" value="investor"> Investor</label>
+                <label><input type="radio" name="user_type" value="mentor"> Mentor</label>
+            </div>
+
+            <button type="submit">Register</button>
+        </form>
+        <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+    </div>
+</body>
+</html>

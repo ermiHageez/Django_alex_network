@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <title>Mentor Dashboard</title>
+    <link rel="stylesheet" href="{% static 'users/css/mentor_dashboard.css' %}">
+</head>
+
+<body>
+    <nav>
+        <div class="nav-header">
+            <h1>Mentor Dashboard</h1>
+            <p>Welcome, {{ request.user.username }}!</p>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+
+        <ul class="nav-menu" id="nav-menu">
+            <li><a href="#">Dashboard</a></li>
+            <li><a href="#">Settings</a></li>
+            <li><a href="#">Profile</a></li>
+            <li><a href="#">Projects</a></li>
+            <li><a href="{% url 'login' %}">Logout</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <div class="content">
+           
+            <h2>Dashboard Content</h2>
+            <p>This is your main dashboard content area.</p>
+            {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                <div class="alert">{{ message }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <ul class="startup-list">
+                {% for startup  in startups %}
+                <li class="startup-card">
+                    <h3> Start Up Name: {{ startup.name }}</h3>
+                    <h4>Description: {{ startup.description }}</h4>
+                    <p>Owner: {{ startup.owner|default:"No Owner available." }}</p>
+                    <form action="{% url 'join_startup' startup.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="join-btn">JOIN</button>
+                    </form>
+                </li>
+                {% empty %}
+                <p>No mentors available at the moment.</p>
+                {% endfor %}
+
+            </ul>
+        </div>
+    </main>
+
+    <script>
+        // Toggle hamburger menu
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('nav-menu');
+
+        hamburger.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <title>Investor Dashboard</title>
+    <link rel="stylesheet" href="{% static 'users/css/investor_dashboard.css' %}">
+</head>
+
+<body>
+    <nav>
+        <div class="nav-header">
+            <h1>Investor Dashboard</h1>
+            <p>Welcome, {{ request.user.username }}!</p>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+
+        <ul class="nav-menu" id="nav-menu">
+            <li><a href="#">Dashboard</a></li>
+            <li><a href="#">Settings</a></li>
+            <li><a href="#">Profile</a></li>
+            <li><a href="#">Projects</a></li>
+            <li><a href="{% url 'login' %}">Logout</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <div class="content">
+            <h2>Dashboard Content</h2>
+            <p>This is your main dashboard content area.</p>
+        </div>
+    </main>
+
+    <script>
+        // Toggle hamburger menu
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('nav-menu');
+
+        hamburger.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+    </script>
+</body>
+
+</html>

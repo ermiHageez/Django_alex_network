@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>All Startups</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #eef2f5;
+      margin: 0;
+      padding: 2rem;
+    }
+    .container {
+      max-width: 900px;
+      margin: auto;
+    }
+    h2 {
+      color: #333;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    .startup-card {
+      background-color: #fff;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 1rem;
+      transition: transform 0.2s ease;
+    }
+    .startup-card:hover {
+      transform: scale(1.01);
+    }
+    .startup-name {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #007bff;
+      margin-bottom: 0.5rem;
+    }
+    .startup-industry {
+      color: #555;
+      margin-bottom: 1rem;
+    }
+    .btn {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background-color: #007bff;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: bold;
+      transition: background-color 0.2s ease;
+    }
+    .btn:hover {
+      background-color: #0056b3;
+    }
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>All Startups</h2>
+
+    {% for startup in startups %}
+      <div class="startup-card">
+        <div class="startup-name">{{ startup.name }}</div>
+        <div class="startup-industry">Industry: {{ startup.industry }}</div>
+        <a class="btn" href="{% url 'startup_member_detail' startup.pk %}">View Details</a>
+      </div>
+    {% empty %}
+      <p>No startups found.</p>
+    {% endfor %}
+
+    <div class="actions">
+      <a class="btn" href="{% url 'startup_create' %}">Create a New Startup</a>
+      <a class="btn" href="{% url 'startup_dashboard' %}">Back to Dashboard</a>
+    </div>
+  </div>
+</body>
+</html>
