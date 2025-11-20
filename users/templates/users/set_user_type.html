@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Choose Your Role</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'users/css/style.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        .form-container {
+            max-width: 400px;
+            margin: 80px auto;
+            padding: 2rem;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        button {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background-color: #377edb;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #2857a3;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Choose Your Role</h2>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Save</button>
+        </form>
+    </div>
+</body>
+</html>

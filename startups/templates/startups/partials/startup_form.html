@@ -1,0 +1,22 @@
+{# startups/templates/startups/partials/startup_form.html #}
+<form id="startup-form" method="post" enctype="multipart/form-data" data-startup-id="{% if startup %}{{ startup.id }}{% endif %}">
+  {% csrf_token %}
+  {{ form.non_field_errors }}
+  <div>
+    {{ form.name.label_tag }}<br>
+    {{ form.name }}
+    {{ form.name.errors }}
+  </div>
+  <div>
+    {{ form.description.label_tag }}<br>
+    {{ form.description }}
+    {{ form.description.errors }}
+  </div>
+  <div>
+    {{ form.industry.label_tag }}<br>
+    {{ form.industry }}
+    {{ form.industry.errors }}
+  </div>
+
+  <button type="submit" class="btn submit-startup">{% if startup %}Update{% else %}Create{% endif %}</button>
+</form>

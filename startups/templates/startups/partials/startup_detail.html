@@ -1,0 +1,11 @@
+{# startups/templates/startups/partials/startup_detail.html #}
+<div class="startup-detail">
+  <h3>{{ startup.name }}</h3>
+  <p>{{ startup.description }}</p>
+  <p><strong>Industry:</strong> {{ startup.industry }}</p>
+  <p><strong>Owner:</strong> {{ startup.owner.username }}</p>
+  <p><strong>Members:</strong> {{ startup.members.count }}</p>
+  {% if request.user != startup.owner %}
+    <button id="join-startup" data-id="{{ startup.id }}">Request to Join</button>
+  {% endif %}
+</div>

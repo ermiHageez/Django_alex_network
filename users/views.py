@@ -10,7 +10,7 @@ from django.contrib import messages
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 
-from .forms import CustomUserCreationForm
+from .forms import CustomUserCreationForm, SocialUserTypeForm
 from startups.models import Startup
 from mentors.models import Mentor
 from investors.models import Investor
@@ -71,7 +71,8 @@ class DashboardView(LoginRequiredMixin, View):
         elif user.is_mentor:
             return redirect('mentor_dashboard')
         else:
-            return redirect('home')
+            # If no type is set yet (e.g., social login)
+            return redirect('set_user_type')
 
 
 # -----------------------------------------------------
@@ -120,13 +121,11 @@ class MentorDashboardView(LoginRequiredMixin, ListView):
 # -----------------------------------------------------
 # Join Views (CBV)
 # -----------------------------------------------------
-
 @method_decorator(login_required, name='dispatch')
 class JoinStartupView(View):
     def post(self, request, startup_id):
         startup = get_object_or_404(Startup, id=startup_id)
 
-        # Prevent duplicate join
         if request.user in startup.members.all():
             messages.warning(request, f"You are already a member of {startup.name}.")
         else:
@@ -156,3 +155,28 @@ class JoinMentorView(View):
         messages.success(request, f"You’ve requested mentorship from {mentor.user}.")
 
         return redirect(request.META.get('HTTP_REFERER', '/'))
+
+
+# -----------------------------------------------------
+# Social login user type selection
+# -----------------------------------------------------
+@login_required
+def set_user_type(request):
+    user = request.user
+    if user.is_startup or user.is_investor or user.is_mentor:
+        # Already set, redirect to dashboard
+        return redirect('dashboard')
+
+    if request.method == "POST":
+        form = SocialUserTypeForm(request.POST)
+        if form.is_valid():
+            user_type = form.cleaned_data['user_type']
+            user.is_startup = user_type == 'startup'
+            user.is_investor = user_type == 'investor'
+            user.is_mentor = user_type == 'mentor'
+            user.save()
+            return redirect('dashboard')
+    else:
+        form = SocialUserTypeForm()
+
+    return render(request, 'users/set_user_type.html', {'form': form})
