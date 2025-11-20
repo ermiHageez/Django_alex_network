@@ -5,21 +5,107 @@
     <meta charset="UTF-8">
     <title>Login</title>
     {% load static %}
+    {% load socialaccount %}
     <link rel="stylesheet" href="{% static 'users/css/style.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        .form-container {
+            max-width: 400px;
+            margin: 80px auto;
+            padding: 2rem;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #3c61d7;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #2857a3;
+        }
+
+        .oauth-login {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        .btn-google {
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            background-color: #4285F4;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-google:hover {
+            background-color: #357ae8;
+        }
+
+        .btn-google svg {
+            height: 24px;
+            width: 24px;
+        }
+
+        .btn-google p {
+            margin: 0;
+        }
+    </style>
 </head>
 <body>
     <div class="form-container">
         <h2>Login</h2>
+
+        <!-- Regular Django login form -->
         <form method="POST">
             {% csrf_token %}
-            {{ form.username.label_tag }}
-            {{ form.username }}
-
-            {{ form.password.label_tag }}
-            {{ form.password }}
-
+            {{ form.non_field_errors }}
+            <div class="form-group">
+                {{ form.username.label_tag }}
+                {{ form.username }}
+                {{ form.username.errors }}
+            </div>
+            <div class="form-group">
+                {{ form.password.label_tag }}
+                {{ form.password }}
+                {{ form.password.errors }}
+            </div>
             <button type="submit">Login</button>
         </form>
+
+        <!-- Google OAuth login button -->
+        <div class="oauth-login">
+            <p>Or login with:</p>
+            <a href="{% provider_login_url 'google' %}" class="btn-google">
+              
+                <p>Google</p>
+            </a>
+        </div>
+
         <p>Don't have an account? <a href="{% url 'register' %}">Register here</a></p>
     </div>
 </body>

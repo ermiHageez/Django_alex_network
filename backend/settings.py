@@ -37,7 +37,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-     
+    'django.contrib.sites',
+    # Allauth apps
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    # Google provider for allauth
+    'allauth.socialaccount.providers.google',
+
+    #  custom Apps
     'users',
     'startups',
     'investors',
@@ -48,6 +56,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'allauth.account.middleware.AccountMiddleware', 
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -133,3 +142,22 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 
+SITE_ID = 1
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+LOGIN_REDIRECT_URL = '/dashboard/'  # or the name of your dashboard URL
+
+LOGOUT_REDIRECT_URL = '/'
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id': '5124046338-eme5q63p21ti18ftgkq06v0ma4mg635j.apps.googleusercontent.com',
+            'secret': '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',
+            'key': ''
+        }
+    }
+}
