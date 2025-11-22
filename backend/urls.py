@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
+from django.http import JsonResponse
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -17,4 +18,9 @@ urlpatterns = [
 
     # Allauth (Google OAuth) routes
     path("accounts/", include("allauth.urls")),
+
+    # .well-known/appspecific/com.chrome.devtools.json
+    path('.well-known/appspecific/com.chrome.devtools.json', lambda request: JsonResponse({})),
 ]
+
+

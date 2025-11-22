@@ -4,8 +4,9 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
+from django.views.generic import TemplateView
 
-from .models import Startup
+from .models import Startup,ChatMessage
 from .forms import StartupForm
 
 # -----------------------
@@ -101,3 +102,15 @@ class JoinStartupView(LoginRequiredMixin, ListView):
             messages.success(request, f"You’ve successfully joined {startup.name}!")
 
         return redirect(request.META.get('HTTP_REFERER', '/'))
+
+class StartupChatView(LoginRequiredMixin, TemplateView):
+    template_name = 'startups/startup_chat.html'
+    
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        startup_id = self.kwargs.get('pk')
+        startup = Startup.objects.get(pk=startup_id)
+        ctx['startup'] = startup
+        ctx['messages'] = ChatMessage.objects.filter(startup=startup).select_related('sender')
+        return ctx
+    

@@ -7,6 +7,22 @@
     {% load static %}
     <title>Mentor Dashboard</title>
     <link rel="stylesheet" href="{% static 'users/css/mentor_dashboard.css' %}">
+    <style>
+        .chat-btn {
+            background-color: #1d4ed8;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 6px;
+        }
+
+        .chat-btn:hover {
+            background-color: #2563eb;
+        }
+    </style>
 </head>
 
 <body>
@@ -32,7 +48,6 @@
 
     <main>
         <div class="content">
-           
             <h2>Dashboard Content</h2>
             <p>This is your main dashboard content area.</p>
             {% if messages %}
@@ -42,21 +57,28 @@
                 {% endfor %}
             </div>
             {% endif %}
+
             <ul class="startup-list">
-                {% for startup  in startups %}
+                {% for startup in startups %}
                 <li class="startup-card">
-                    <h3> Start Up Name: {{ startup.name }}</h3>
+                    <h3>Start Up Name: {{ startup.name }}</h3>
                     <h4>Description: {{ startup.description }}</h4>
                     <p>Owner: {{ startup.owner|default:"No Owner available." }}</p>
-                    <form action="{% url 'join_startup' startup.id %}" method="post">
+
+                    <form action="{% url 'join_startup' startup.id %}" method="post" style="display:inline;">
                         {% csrf_token %}
                         <button type="submit" class="join-btn">JOIN</button>
                     </form>
+
+                    {% if startup.id %}
+                    <a href="{% url 'startup_chat' startup.id %}">
+                        <button type="button" class="chat-btn">Chat</button>
+                    </a>
+                    {% endif %}
                 </li>
                 {% empty %}
-                <p>No mentors available at the moment.</p>
+                <p>No startups available at the moment.</p>
                 {% endfor %}
-
             </ul>
         </div>
     </main>
