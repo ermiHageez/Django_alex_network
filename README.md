@@ -116,8 +116,11 @@ Django REST Framework
 yaml
 Copy code
 
----
+for Dphne Server so reat time chat with Redis and the Websocket Will work and added Google OAuth
 
-If you want, I can **also add a ready-to-go Docker + Postgres + Redis development README section** with commands that work straight in Codespaces — it will make your repo fully plug-and-play.  
+cd /mnt/c/Users/USER/Desktop/python_django/Django_alex_network
+. .venv/bin/activate
+export DJANGO_SETTINGS_MODULE=backend.settings
+pkill -f daphne || true
+.venv/bin/daphne -b 0.0.0.0 -p 8000 backend.asgi:application
 
-Do you want me to do that next?
