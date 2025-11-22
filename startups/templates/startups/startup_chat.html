@@ -1,0 +1,106 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat — {{ startup.name }}</title>
+  <link rel="stylesheet" href="{% static 'users/css/startup_dashboard.css' %}">
+  <style>
+    body { font-family: Arial, sans-serif; background:#f4f4f4; margin:0; padding:0; }
+    .chat-wrapper { max-width:900px; margin:2rem auto; background:#fff; padding:1rem; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1); }
+    .chat-wrapper h2 { text-align:center; margin-bottom:1rem; }
+    .messages { height:360px; overflow-y:auto; border:1px solid #eee; padding:1rem; border-radius:6px; background:#fafafa; }
+    .message { margin-bottom: 10px; }
+    .message .meta { font-size:0.85rem; color:#666; margin-bottom:3px; }
+    .message .text { font-size:1rem; padding:6px 10px; background:#f2f7ff; border-radius:6px; display:inline-block; max-width:80%; word-wrap:break-word; }
+    .send-form { margin-top: 1rem; display:flex; gap:8px; }
+    .send-form input[type="text"] { flex:1; padding:10px; border-radius:6px; border:1px solid #ccc; font-size:1rem; }
+    .send-form button { padding:10px 20px; border:none; border-radius:6px; background:#4a90e2; color:#fff; cursor:pointer; font-weight:bold; }
+    .send-form button:hover { background:#357ab7; }
+    #loading { display:none; }
+  </style>
+</head>
+<body>
+  <div class="chat-wrapper">
+    <h2>Chat — {{ startup.name }}</h2>
+
+    <!-- Chat messages -->
+    <div class="messages" id="messages">
+      {% for msg in messages %}
+        <div class="message">
+          <div class="meta">{{ msg.sender.username }} • {{ msg.sent_at|date:"M d, Y H:i" }}</div>
+          <div class="text">{{ msg.content|linebreaksbr }}</div>
+        </div>
+      {% empty %}
+        <p>No messages yet. Start the conversation!</p>
+      {% endfor %}
+    </div>
+
+    <!-- Send message form -->
+    <div class="send-form">
+      <input id="messageInput" type="text" placeholder="Type a message..." />
+      <button id="sendBtn">Send</button>
+    </div>
+  </div>
+
+  <div id="loading">Loading...</div>
+
+  <script>
+    (function(){
+      const startupId = "{{ startup.pk }}";
+      const wsScheme = window.location.protocol === "https:" ? "wss" : "ws";
+      const socket = new WebSocket(wsScheme + "://" + window.location.host + "/ws/startup/" + startupId + "/");
+
+      const messagesEl = document.getElementById("messages");
+      const input = document.getElementById("messageInput");
+      const btn = document.getElementById("sendBtn");
+
+      socket.onopen = () => {
+        console.log("WebSocket connected");
+        document.getElementById("loading").style.display = "none";
+      };
+
+      socket.onmessage = (e) => {
+        const data = JSON.parse(e.data);
+        const el = document.createElement("div");
+        el.className = "message";
+        el.innerHTML = `
+          <div class="meta">${escapeHtml(data.user)} • ${new Date(data.timestamp || Date.now()).toLocaleString()}</div>
+          <div class="text">${escapeHtml(data.message)}</div>
+        `;
+        messagesEl.appendChild(el);
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+      };
+
+      socket.onclose = (e) => console.log("WebSocket closed", e);
+
+      socket.onerror = (e) => {
+        console.error("WebSocket error:", e);
+        alert("WebSocket connection failed. Please try again later.");
+      };
+
+      function sendMessage() {
+        const value = input.value.trim();
+        if (!value) return;
+        socket.send(JSON.stringify({ message: value }));
+        input.value = "";
+      }
+
+      btn.addEventListener("click", sendMessage);
+      input.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") sendMessage();
+      });
+
+      function escapeHtml(unsafe) {
+        return (unsafe + "")
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+      }
+    })();
+  </script>
+</body>
+</html>

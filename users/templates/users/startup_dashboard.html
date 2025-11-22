@@ -28,6 +28,7 @@
             <li><a href="#">Dashboard</a></li>
             <li><a href="{% url 'startup_create' %}">Create Start UP</a></li>
             <li><a href="{% url 'startup_list' %}">List of Start Ups</a></li>
+
             <li>
                 {% with user_startups=user.startups.all %}
                 {% if user_startups %}
@@ -35,7 +36,6 @@
                     {% for startup in user_startups %}
                     <li>
                         {% if user == startup.owner %}
-                        <!-- <a href="{% url 'update_startup' startup.id %}">Edit {{ startup.name }}</a> -->
                         {% endif %}
                         <a href="{% url 'startup_member_detail' startup.id %}">View {{ startup.name }}</a>
                     </li>
@@ -45,17 +45,17 @@
                 <a href="{% url 'startup_create' %}">Create Startup</a>
                 {% endif %}
                 {% endwith %}
-
-
             </li>
+
             <li><a href="{% url 'login' %}">Logout</a></li>
         </ul>
     </nav>
 
-    <!-- Main content -->
+    <!-- Main Content -->
     <main>
         <h2>List of Mentors</h2>
-        <p>Explore Mentors and send a Request Mentorship request to collaborate!</p>
+        <p>Explore Mentors and send a mentorship request or start a real-time chat.</p>
+
         {% if messages %}
         <div class="messages">
             {% for message in messages %}
@@ -68,21 +68,29 @@
             {% for mentor in mentors %}
             <li class="startup-card">
                 <h3>{{ mentor.user }}</h3>
-                <h3>{{ mentor.Bio }}</h3>
-                <h3>{{ mentor.Startups }}</h3>
-                <p>{{ mentor.expertise|default:"No expertise available." }}</p>
-                <form action="{% url 'join_mentor' mentor.id %}" method="post">
+                <p>{{ mentor.Bio|default:"No bio provided." }}</p>
+                <p><strong>Startups:</strong> {{ mentor.Startups }}</p>
+                <p><strong>Expertise:</strong> {{ mentor.expertise|default:"No expertise available." }}</p>
+
+                <!-- Mentorship Request Button -->
+                <form action="{% url 'join_mentor' mentor.id %}" method="post" style="margin-bottom: 10px;">
                     {% csrf_token %}
                     <button type="submit" class="join-btn">Request Mentorship</button>
                 </form>
+
+                <!-- Real-time Chat Button -->
+                <a href="{% url 'startup_chat' mentor.id %}" class="chat-btn">
+                    💬 Chat
+                </a>
+
             </li>
             {% empty %}
-            <p>No startups available at the moment.</p>
+            <p>No mentors available at the moment.</p>
             {% endfor %}
         </ul>
     </main>
 
-    <!-- JavaScript for menu -->
+    <!-- JavaScript: Mobile Navigation Toggle -->
     <script>
         const hamburger = document.getElementById('hamburger');
         const navMenu = document.getElementById('nav-menu');
@@ -94,3 +102,101 @@
 </body>
 
 </html>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+    }
+
+    nav {
+        background-color: #333;
+        color: white;
+        padding: 1rem;
+    }
+
+    .nav-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .nav-menu {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        gap: 1rem;
+    }
+
+    .nav-menu li a {
+        color: white;
+        text-decoration: none;
+    }
+
+    .hamburger {
+        display: none;
+        flex-direction: column;
+        cursor: pointer;
+    }
+
+    .hamburger span {
+        height: 3px;
+        width: 25px;
+        background-color: white;
+        margin-bottom: 4px;
+        border-radius: 5px;
+    }
+
+    main {
+        padding: 2rem;
+    }
+
+    .startup-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .startup-card {
+        background-color: white;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .join-btn, .chat-btn {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        margin-top: 0.5rem;
+        text-decoration: none;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .join-btn {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .chat-btn {
+        background-color: #007bff;
+        color: white;
+    }
+
+    @media (max-width: 768px) {
+        .nav-menu {
+            flex-direction: column;
+            display: none;
+        }
+
+        .nav-menu.active {
+            display: flex;
+        }
+
+        .hamburger {
+            display: flex;
+        }
+    }
