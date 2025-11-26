@@ -102,6 +102,7 @@ class JoinStartupView(LoginRequiredMixin, ListView):
             messages.success(request, f"You’ve successfully joined {startup.name}!")
 
         return redirect(request.META.get('HTTP_REFERER', '/'))
+    
 
 class StartupChatView(LoginRequiredMixin, TemplateView):
     template_name = 'startups/startup_chat.html'

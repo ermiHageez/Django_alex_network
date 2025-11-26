@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mentor_chat {%mentor.name%}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'users/css/mentor_dashboard.css' %}">
+</head>
+<body>
+    <div class="chat-wrapper">
+        <h2>Chat — {{ mentor.name }}</h2>
+
+        <!-- Chat messages -->
+        <div class="messages" id="messages">
+            {% for msg in messages %}
+                <div class="message">
+                    <div class="meta">{{ msg.sender.username }} • {{ msg.sent_at|date:"M d, Y H:i" }}</div>
+                    <div class="text">{{ msg.content|linebreaksbr }}</div>              
+                </div>
+            {% empty %}
+                <p>No messages yet. Start the conversation!</p> 
+            {% endfor %}
+    </div>
+        <!-- Send message form -->
+        <div class="send-form">
+            <input id="messageInput" type="text" placeholder="Type a message..." />
+            <button id="sendBtn">Send</button>
+        </div>  
+    </div>
+    <div id="loading">Loading...</div>
+
+    <script>
+    (function(){
+      const mentorId = "{{ mentor.pk }}";
+      const wsScheme = window.location.protocol === "https:" ? "wss" : "ws";
+      const socket = new WebSocket(wsScheme + "://" + window.location.host + "/ws/mentor/" + mentorId + "/");
+
+      const messagesEl = document.getElementById("messages");
+      const input = document.getElementById("messageInput");
+      const btn = document.getElementById("sendBtn");
+
+      socket.onopen = () => {
+        console.log("WebSocket connected");
+      };
+
+      socket.onmessage = (e) => {
+        const data = JSON.parse(e.data);
+        const messageEl = document.createElement("div");
+        messageEl.classList.add("message");
+
+        const metaEl = document.createElement("div");
+        metaEl.classList.add("meta");
+        metaEl.textContent = `${data.sender} • ${data.sent_at}`;
+        
+        const textEl = document.createElement("div");
+        textEl.classList.add("text");
+        textEl.innerHTML = data.content.replace(/\n/g, "<br>");
+
+        messageEl.appendChild(metaEl);
+        messageEl.appendChild(textEl);
+        messagesEl.appendChild(messageEl);
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+      };
+
+      socket.onclose = () => {
+        console.log("WebSocket disconnected");
+      };
+
+      btn.onclick = () => {
+        const message = input.value;
+        if (message.trim() !== "") {
+          socket.send(JSON.stringify({ 'message': message }));
+          input.value = "";
+        }
+      };
+    })();
+    </script>
+    
+</body>
+</html>

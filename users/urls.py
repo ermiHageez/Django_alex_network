@@ -21,6 +21,6 @@ urlpatterns = [
     path('join-startup/<int:startup_id>/', JoinStartupView.as_view(), name='join_startup'),
     path('join-investor/<int:investor_id>/', JoinInvestorView.as_view(), name='join_investor'),
     path('join-mentor/<int:mentor_id>/', JoinMentorView.as_view(), name='join_mentor'),
-
+     
     path('set-user-type/', views.set_user_type, name='set_user_type'),
 ]
