@@ -114,8 +114,17 @@ class MentorDashboardView(LoginRequiredMixin, ListView):
     template_name = 'users/mentor_dashboard.html'
     context_object_name = 'startups'
 
-    def get_queryset(self):
+    def get_queryset(self): 
         return Startup.objects.all()
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        try:
+            joined_ids = set(Startup.objects.filter(members=self.request.user).values_list('id', flat=True))
+        except Exception:
+            joined_ids = set()
+        ctx['joined_startup_ids'] = joined_ids
+        return ctx
 
 
 # -----------------------------------------------------

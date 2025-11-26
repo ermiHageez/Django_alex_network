@@ -10,12 +10,13 @@ django_asgi_app = get_asgi_application()
 
 # Import routing after Django is initialized to avoid AppRegistryNotReady
 import startups.routing
+import mentors.routing
 
 application = ProtocolTypeRouter({
     "http": django_asgi_app,
     "websocket": AuthMiddlewareStack(
         URLRouter(
-            startups.routing.websocket_urlpatterns
+            startups.routing.websocket_urlpatterns + mentors.routing.websocket_urlpatterns
         )
     ),
 })

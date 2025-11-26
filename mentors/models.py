@@ -10,3 +10,16 @@ class Mentor(models.Model):
 
     def __str__(self):
         return self.user.username
+
+
+class ChatMessage(models.Model):
+    startup = models.ForeignKey(Startup, on_delete=models.CASCADE, related_name='messages')
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
+    content = models.TextField()
+    sent_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['sent_at']
+
+    def __str__(self):
+        return f"{self.sender.username}: {self.content[:50]}"

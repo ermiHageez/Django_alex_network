@@ -13,6 +13,8 @@ urlpatterns = [
     # Startups app routes
     path('startups/', include('startups.urls')),
 
+    # Mentors app routes (include with namespace so URL names like 'mentors:mentor_chat' work)
+    path('mentors/', include(('mentors.urls', 'mentors'), namespace='mentors')),
     # Dashboard view
     path("dashboard/", TemplateView.as_view(template_name="startup_dashboard.html"), name="dashboard"),
 

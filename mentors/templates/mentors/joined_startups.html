@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List of Joined Start Ups</title>
+</head>
+
+<body>
+    <h1>Start Ups You've Joined</h1>
+    {% if startups %}
+    <ul>
+        {% for startup in startups %}
+        <li>{{ startup.name }} - {{ startup.description }}</li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>You have not joined any start ups yet.</p>
+    {% endif %}
+</body>
+
+</html>
